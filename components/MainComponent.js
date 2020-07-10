@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import Home from './HomeComponent';
 import Directory from './DirectoryComponent';
-import About from './AboutComponent';
-import Contact from './ContactComponent';
 import CampsiteInfo from './CampsiteInfoComponent';
 import { View, Platform, StyleSheet, Text, ScrollView, Image } from 'react-native';
 import { createStackNavigator, createDrawerNavigator, DrawerItems } from 'react-navigation';
+import About from './AboutComponent';
+import Contact from './ContactComponent';
 import { Icon } from 'react-native-elements';
 import SafeAreaView from 'react-native-safe-area-view';
-import { connect } from 'react-redux';
-import { fetchCampsites, fetchComments, fetchPromotions, fetchPartners } from '../redux/ActionCreators';
+import { connect } from 'react-redux'; 
+import { fetchCampsites, fetchComments, fetchPromotions, fetchPartners } from '../redux/ActionCreators'; 
+import Reservation from './ReservationComponent';
+
 
 const mapDispatchToProps = {
     fetchCampsites,
@@ -17,6 +19,7 @@ const mapDispatchToProps = {
     fetchPromotions,
     fetchPartners
 };
+
 const DirectoryNavigator = createStackNavigator(
     {
         Directory: { 
@@ -45,6 +48,7 @@ const DirectoryNavigator = createStackNavigator(
         }
     }
 );
+
 const HomeNavigator = createStackNavigator(
     {
         Home: { screen: Home }
@@ -67,6 +71,8 @@ const HomeNavigator = createStackNavigator(
         })
     }
 );
+
+// part of week 1 assignment ,task 1: make stacknavigators 
 
 const AboutNavigator = createStackNavigator(
     {
@@ -114,15 +120,16 @@ const ContactNavigator = createStackNavigator(
     }
 );
 
+
 const CustomDrawerContentComponent = props => (
+    
     <ScrollView>
         <SafeAreaView 
             style={styles.container}
             forceInset={{top: 'always', horizontal: 'never'}}>
             <View style={styles.drawerHeader}>
                 <View style={{flex: 1}}>
-                    <Image source={require('./images/logo.png')}
-                     style={styles.drawerImage} />
+                    <Image source={require('./images/logo.png')} style={styles.drawerImage} />
                 </View>
                 <View style={{flex: 2}}>
                     <Text style={styles.drawerHeaderText}>NuCamp</Text>
@@ -133,7 +140,31 @@ const CustomDrawerContentComponent = props => (
     </ScrollView>
 );
 
+const ReservationNavigator = createStackNavigator(
+    {
+        Reservation: { screen: Reservation }
+    },
+    {
+        navigationOptions: ({navigation}) => ({
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            },
+            headerLeft: <Icon
+                name='tree'
+                type='font-awesome'
+                iconStyle={styles.stackIcon}
+                onPress={() => navigation.toggleDrawer()}
+            />
+        })
+    }
+);
+
 const MainNavigator = createDrawerNavigator(
+
     {
         Home: {
             screen: HomeNavigator,
@@ -154,6 +185,20 @@ const MainNavigator = createDrawerNavigator(
                 drawerIcon: ({tintColor}) => (
                     <Icon
                         name='list'
+                        type='font-awesome'
+                        size={24}
+                        color={tintColor}
+                    />
+                )
+            }
+        },
+        Reservation: {
+            screen: ReservationNavigator,
+            navigationOptions: {
+                drawerLabel: 'Reserve Campsite',
+                drawerIcon: ({tintColor}) => (
+                    <Icon
+                        name='tree'
                         type='font-awesome'
                         size={24}
                         color={tintColor}
@@ -195,16 +240,18 @@ const MainNavigator = createDrawerNavigator(
         contentComponent: CustomDrawerContentComponent
     }
 );
+
 class Main extends Component {
 
-    componentDidMount() {
-        this.props.fetchCampsites();  //ACTION CREATORS
-        this.props.fetchComments();
-        this.props.fetchPromotions();
-        this.props.fetchPartners();
+    componentDidMount(){
+        this.props.fetchCampsites(); 
+        this.props.fetchComments(); 
+        this.props.fetchPromotions(); 
+        this.props.fetchPartners(); 
     }
-    render() {
-        return (
+
+    render(){
+        return(
             <View style={{
                 flex: 1,
                 paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight
@@ -216,6 +263,12 @@ class Main extends Component {
 }
 
 const styles = StyleSheet.create({
+    stackIcon: {
+        marginLeft: 10,
+        color: '#fff',
+        fontSize: 24
+    },
+    
     container: {
         flex: 1,
     },
@@ -244,5 +297,6 @@ const styles = StyleSheet.create({
     }
 });
 
+
+
 export default connect(null, mapDispatchToProps)(Main);
-//WE USE NULL AS THE FIRST ARGUMENT BECAUSE WE DON'T HAVE MAPSTATETOPROPS.
