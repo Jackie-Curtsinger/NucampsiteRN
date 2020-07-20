@@ -3,6 +3,7 @@ import Home from './HomeComponent';
 import Directory from './DirectoryComponent';
 import CampsiteInfo from './CampsiteInfoComponent';
 import Favorites from './FavoritesComponent';
+import Login from './LoginComponent';
 import { View, Platform, StyleSheet, Text, ScrollView, Image } from 'react-native';
 import { createStackNavigator, createDrawerNavigator, DrawerItems } from 'react-navigation';
 import About from './AboutComponent';
@@ -12,17 +13,12 @@ import SafeAreaView from 'react-native-safe-area-view';
 import { connect } from 'react-redux'; 
 import { fetchCampsites, fetchComments, fetchPromotions, fetchPartners } from '../redux/ActionCreators'; 
 import Reservation from './ReservationComponent';
-import Login from './LoginComponent';
-
-
-
 const mapDispatchToProps = {
     fetchCampsites,
     fetchComments,
     fetchPromotions,
     fetchPartners
 };
-
 const DirectoryNavigator = createStackNavigator(
     {
         Directory: { 
@@ -51,7 +47,6 @@ const DirectoryNavigator = createStackNavigator(
         }
     }
 );
-
 const HomeNavigator = createStackNavigator(
     {
         Home: { screen: Home }
@@ -73,10 +68,7 @@ const HomeNavigator = createStackNavigator(
             />
         })
     }
-);
-
-
-
+); 
 const AboutNavigator = createStackNavigator(
     {
         About: { screen: About }
@@ -99,7 +91,6 @@ const AboutNavigator = createStackNavigator(
         })
     }
 );
-
 const ContactNavigator = createStackNavigator(
     {
         Contact: { screen: Contact }
@@ -122,27 +113,6 @@ const ContactNavigator = createStackNavigator(
         })
     }
 );
-
-
-const CustomDrawerContentComponent = props => (
-    
-    <ScrollView>
-        <SafeAreaView 
-            style={styles.container}
-            forceInset={{top: 'always', horizontal: 'never'}}>
-            <View style={styles.drawerHeader}>
-                <View style={{flex: 1}}>
-                    <Image source={require('./images/logo.png')} style={styles.drawerImage} />
-                </View>
-                <View style={{flex: 2}}>
-                    <Text style={styles.drawerHeaderText}>NuCamp</Text>
-                </View>
-            </View>
-            <DrawerItems {...props} />
-        </SafeAreaView>
-    </ScrollView>
-);
-
 const ReservationNavigator = createStackNavigator(
     {
         Reservation: { screen: Reservation }
@@ -187,7 +157,6 @@ const FavoritesNavigator = createStackNavigator(
         })
     }
 );
-
 const LoginNavigator = createStackNavigator(
     {
         Login: { screen: Login }
@@ -210,6 +179,23 @@ const LoginNavigator = createStackNavigator(
         })
     }
 );
+const CustomDrawerContentComponent = props => (
+    <ScrollView>
+        <SafeAreaView 
+            style={styles.container}
+            forceInset={{top: 'always', horizontal: 'never'}}>
+            <View style={styles.drawerHeader}>
+                <View style={{flex: 1}}>
+                    <Image source={require('./images/logo.png')} style={styles.drawerImage} />
+                </View>
+                <View style={{flex: 2}}>
+                    <Text style={styles.drawerHeaderText}>NuCamp</Text>
+                </View>
+            </View>
+            <DrawerItems {...props} />
+        </SafeAreaView>
+    </ScrollView>
+);
 const MainNavigator = createDrawerNavigator(
     {
         Login: {
@@ -218,6 +204,19 @@ const MainNavigator = createDrawerNavigator(
                 drawerIcon: ({tintColor}) => (
                     <Icon
                         name='sign-in'
+                        type='font-awesome'
+                        size={24}
+                        color={tintColor}
+                    />
+                )
+            }
+        },
+        Home: {
+            screen: HomeNavigator,
+            navigationOptions: {
+                drawerIcon: ({tintColor}) => (
+                    <Icon
+                        name='home'
                         type='font-awesome'
                         size={24}
                         color={tintColor}
@@ -296,20 +295,18 @@ const MainNavigator = createDrawerNavigator(
         }
     },
     {
+        initialRouteName: 'Home',
         drawerBackgroundColor: '#CEC8FF',
         contentComponent: CustomDrawerContentComponent
     }
 );
-
 class Main extends Component {
-
     componentDidMount(){
         this.props.fetchCampsites(); 
         this.props.fetchComments(); 
         this.props.fetchPromotions(); 
         this.props.fetchPartners(); 
     }
-
     render(){
         return(
             <View style={{
@@ -321,14 +318,12 @@ class Main extends Component {
         );
     }
 }
-
 const styles = StyleSheet.create({
     stackIcon: {
         marginLeft: 10,
         color: '#fff',
         fontSize: 24
     },
-    
     container: {
         flex: 1,
     },
@@ -356,7 +351,4 @@ const styles = StyleSheet.create({
         fontSize: 24
     }
 });
-
-
-
 export default connect(null, mapDispatchToProps)(Main);
